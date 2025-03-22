@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql_core_db:3306/banking_core_service
+    username: user1
+    password: user1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      base-url: http://172.25.0.12:9411/api/v2/spans
+
+server:
+  port: 8092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.189.128:8081/eureka/
+
+info:
+  app:
+    name: core-banking-service
+
+# do not need this file in the project because it is already used only for docker-compose

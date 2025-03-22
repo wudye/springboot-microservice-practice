@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.189.128:3306/banking_core_service
+    username: user1
+    password: user1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+
+
+server:
+  port: 8092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+
+info:
+  app:
+    name: core-banking-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        data: DEBUG
+        security: DEBUG
+    file:
+      name: "core-banking-service.log"
+      path: "./logs"

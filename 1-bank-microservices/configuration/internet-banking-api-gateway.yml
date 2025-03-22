@@ -1,0 +1,85 @@
+spring:
+  ## API SECURITY WITH KEYCLOAK PROVIDER
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${app.config.keycloak.url}/realms/${app.config.keycloak.realm}/protocol/openid-connect/certs
+
+  ## GATEWAY CONFIGURATIONS
+  cloud:
+    gateway:
+      routes:
+        ## USER SERVICE
+        - id: internet-banking-user-service
+          uri: lb://internet-banking-user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        ## FUND TRANSFER SERVICE
+        - id: internet-banking-fund-transfer-service
+          uri: lb://internet-banking-fund-transfer-service
+          predicates:
+            - Path=/fund-transfer/**
+          filters:
+            - StripPrefix=1
+        ## CORE BANKING SERVICE
+        - id: core-banking-service
+          uri: lb://core-banking-service
+          predicates:
+            - Path=/banking-core/**
+          filters:
+            - StripPrefix=1
+        ## UTILITY PAYMENTS SERVICE
+        - id: internet-banking-utility-payment-service
+          uri: lb://internet-banking-utility-payment-service
+          predicates:
+            - Path=/utility-payment/**
+          filters:
+            - StripPrefix=1
+
+## SECURITY BASED CONFIGURATIONS
+app:
+  config:
+    keycloak:
+      url: http://localhost:8080/auth
+      realm: javatodev-internet-banking
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+  file:
+    name: '/var/log/internet-banking-api-gateway/application.log'
+
+info:
+  app:
+    name: ${spring.application.name}
+
+##ACTUATOR ENDPOINT CONFIGURATIONS
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  info:
+    env:
+      enabled: true
